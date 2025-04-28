@@ -1,0 +1,6 @@
+[package]
+name = "solana-comp"
+edition.workspace = true
+version.workspace = true
+
+[dev-dependencies]

@@ -1,0 +1,8 @@
+[package]
+name = "sanctum-ata-jiminy"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+jiminy-cpi = { workspace = true }
+sanctum-ata-core = { workspace = true }
