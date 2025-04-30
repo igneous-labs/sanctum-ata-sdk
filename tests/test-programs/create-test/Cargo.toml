@@ -1,0 +1,17 @@
+[package]
+name = "create-test"
+edition.workspace = true
+version.workspace = true
+publish = false
+
+[features]
+default = []
+test-sbf = []
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+jiminy-entrypoint = { workspace = true }
+jiminy-cpi = { workspace = true }
+sanctum-ata-jiminy = { workspace = true }

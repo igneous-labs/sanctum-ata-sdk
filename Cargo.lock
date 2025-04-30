@@ -515,6 +515,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "create-test"
+version = "0.1.0"
+dependencies = [
+ "jiminy-cpi",
+ "jiminy-entrypoint",
+ "sanctum-ata-jiminy",
+]
+
+[[package]]
 name = "crossbeam-channel"
 version = "0.5.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1265,7 +1274,7 @@ checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 [[package]]
 name = "jiminy-account"
 version = "0.1.0"
-source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#e9fc547e3654605df611413ed998c09a292064e0"
+source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#a04bdd7e32355f8741366d412d581444b1c5cf05"
 dependencies = [
  "jiminy-program-error",
 ]
@@ -1273,7 +1282,7 @@ dependencies = [
 [[package]]
 name = "jiminy-cpi"
 version = "0.1.0"
-source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#e9fc547e3654605df611413ed998c09a292064e0"
+source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#a04bdd7e32355f8741366d412d581444b1c5cf05"
 dependencies = [
  "jiminy-account",
  "jiminy-pda",
@@ -1282,9 +1291,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "jiminy-entrypoint"
+version = "0.1.0"
+source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#a04bdd7e32355f8741366d412d581444b1c5cf05"
+dependencies = [
+ "jiminy-account",
+ "jiminy-syscall",
+]
+
+[[package]]
 name = "jiminy-pda"
 version = "0.1.0"
-source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#e9fc547e3654605df611413ed998c09a292064e0"
+source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#a04bdd7e32355f8741366d412d581444b1c5cf05"
 dependencies = [
  "jiminy-syscall",
 ]
@@ -1292,12 +1310,12 @@ dependencies = [
 [[package]]
 name = "jiminy-program-error"
 version = "0.1.0"
-source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#e9fc547e3654605df611413ed998c09a292064e0"
+source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#a04bdd7e32355f8741366d412d581444b1c5cf05"
 
 [[package]]
 name = "jiminy-syscall"
 version = "0.1.0"
-source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#e9fc547e3654605df611413ed998c09a292064e0"
+source = "git+https://github.com/igneous-labs/jiminy.git?branch=master#a04bdd7e32355f8741366d412d581444b1c5cf05"
 
 [[package]]
 name = "js-sys"
@@ -2459,10 +2477,6 @@ checksum = "7ace9fea2daa28354d107ea879cff107181d85cd4e0f78a2bedb10e1a428c97e"
 dependencies = [
  "solana-hash",
 ]
-
-[[package]]
-name = "solana-comp"
-version = "0.1.0"
 
 [[package]]
 name = "solana-compute-budget"

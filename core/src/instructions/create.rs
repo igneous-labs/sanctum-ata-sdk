@@ -19,7 +19,7 @@ pub struct CreateIxAccs<T> {
 
     pub mint: T,
     pub sys_prog: T,
-    pub spl_token_prog: T,
+    pub token_prog: T,
 }
 
 impl<T: Copy> CreateIxAccs<T> {
@@ -43,6 +43,7 @@ pub const CREATE_IX_DISCM: u8 = 0;
 
 pub const CREATE_IDEMPOTENT_IX_DISCM: u8 = 1;
 
+/// Also applicable to CreateIdempotent
 pub const CREATE_IX_DATA_LEN: usize = 1;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

@@ -4,7 +4,7 @@ resolver = "2"
 members = [
     "core",
     "jiminy",
-    "tests/solana-comp",
+    "tests/test-programs/*",
     "tests/test-utils", 
 ]
 
