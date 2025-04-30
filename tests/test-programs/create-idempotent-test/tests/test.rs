@@ -1,4 +1,4 @@
-//! .so file size 4408
+//! .so file size 4272
 
 #![cfg(feature = "test-sbf")]
 
@@ -29,7 +29,7 @@ const MINT: Pubkey = solana_pubkey::pubkey!("2AHbbAHQQrQsEP7yrE9PGWpkn7Uz27PKJBB
 const SUPPLY: u64 = 29_125_461_325;
 const DECIMALS: u8 = 9;
 
-// CUs: 28435
+// CUs: 28423
 #[test]
 fn create_idempotent_nonexisting_cus() {
     let svm = mollusk();
@@ -60,7 +60,7 @@ fn create_idempotent_nonexisting_cus() {
     // executed, so no need to check properties of created ata
 }
 
-// CUs: 12426
+// CUs: 12414
 #[test]
 fn create_idempotent_already_existing_cus() {
     let svm = mollusk();

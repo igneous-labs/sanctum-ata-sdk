@@ -1,4 +1,4 @@
-//! .so file size 4408
+//! .so file size 4272
 
 #![cfg(feature = "test-sbf")]
 
@@ -28,7 +28,7 @@ const MINT: Pubkey = solana_pubkey::pubkey!("2AHbbAHQQrQsEP7yrE9PGWpkn7Uz27PKJBB
 const SUPPLY: u64 = 29_125_461_325;
 const DECIMALS: u8 = 9;
 
-// CUs: 28427
+// CUs: 28415
 #[test]
 fn create_cus() {
     let svm = mollusk();
