@@ -33,7 +33,8 @@ pub fn create_ata(seeds: &AtaPdaSeeds, bump: &u8, ata_prog: &[u8; 32]) -> Option
 pub fn create_ata_to<'pda>(
     seeds: &AtaPdaSeeds,
 
-    // TODO: check perf of changing this to `u8` instead of ref
+    // Changing this to pass bump by value (`u8` instead of `&u8`)
+    // results in additional 16 bytes binary size and 2 CUs runtime cost
     bump: &u8,
 
     ata_prog: &[u8; 32],
