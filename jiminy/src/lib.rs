@@ -4,3 +4,4 @@
 pub use sanctum_ata_core;
 
 pub mod instructions;
+pub mod pda;
