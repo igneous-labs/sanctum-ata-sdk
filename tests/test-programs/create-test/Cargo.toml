@@ -15,3 +15,12 @@ crate-type = ["cdylib", "lib"]
 jiminy-entrypoint = { workspace = true }
 jiminy-cpi = { workspace = true }
 sanctum-ata-jiminy = { workspace = true }
+
+[dev-dependencies]
+mollusk-svm = { workspace = true }
+mollusk-svm-programs-token = { workspace = true }
+proptest = { workspace = true }
+sanctum-ata-test-utils = { workspace = true }
+solana-account = { workspace = true }
+solana-pubkey = { workspace = true }
+spl-token = { workspace = true }
