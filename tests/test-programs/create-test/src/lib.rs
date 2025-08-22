@@ -12,7 +12,7 @@ use jiminy_cpi::program_error::BuiltInProgramError;
 use jiminy_entrypoint::program_error::ProgramError;
 use sanctum_ata_jiminy::{
     instructions::create::create_ix,
-    pda::{create_ata_to, try_find_ata_to},
+    pda::{create_ata_to, create_raw_ata_to, try_find_ata_to},
     sanctum_ata_core::{instructions::create::CreateIxAccs, pda::NewAtaPdaArgsBuilder},
 };
 
@@ -58,15 +58,16 @@ fn process_ix(
     // - shaves off ~130 bytes from .so file
     // - saves 12 CUs
 
-    let mut found_ata = MaybeUninit::uninit();
+    let mut found_ata_buf = MaybeUninit::uninit();
     let mut bump = MaybeUninit::uninit();
-    let Some((found_ata, bump)) = try_find_ata_to(&seeds, ata_prog_key, &mut found_ata, &mut bump)
+    let Some((found_ata, bump)) =
+        try_find_ata_to(&seeds, ata_prog_key, &mut found_ata_buf, &mut bump)
     else {
         return Err(ProgramError::custom(0));
     };
 
-    let mut created_ata = MaybeUninit::uninit();
-    let Some(created_ata) = create_ata_to(&seeds, bump, ata_prog_key, &mut created_ata) else {
+    let mut created_ata_buf = MaybeUninit::uninit();
+    let Some(created_ata) = create_ata_to(&seeds, bump, ata_prog_key, &mut created_ata_buf) else {
         return Err(ProgramError::custom(1));
     };
 
@@ -76,6 +77,15 @@ fn process_ix(
 
     if found_ata != ata_key {
         return Err(ProgramError::custom(3));
+    }
+
+    let Some(created_raw_ata) = create_raw_ata_to(&seeds, bump, ata_prog_key, &mut created_ata_buf)
+    else {
+        return Err(ProgramError::custom(4));
+    };
+
+    if found_ata != created_raw_ata {
+        return Err(ProgramError::custom(5));
     }
 
     Cpi::new().invoke_signed(accounts, create_ix(ata_prog, create_accs), &[])
