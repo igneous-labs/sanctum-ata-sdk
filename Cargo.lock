@@ -2529,7 +2529,6 @@ dependencies = [
  "solana-account",
  "solana-logger",
  "solana-pubkey",
- "solana-rent",
  "spl-associated-token-account 6.0.0",
  "spl-token 8.0.0",
 ]

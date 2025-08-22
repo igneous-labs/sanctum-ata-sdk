@@ -7,7 +7,6 @@ version.workspace = true
 sanctum-ata-core = { workspace = true }
 solana-account = { workspace = true }
 solana-pubkey = { workspace = true }
-solana-rent = { workspace = true }
 spl-associated-token-account = { workspace = true }
 spl-token = { workspace = true }
 

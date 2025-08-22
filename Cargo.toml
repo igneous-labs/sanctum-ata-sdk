@@ -32,7 +32,6 @@ mollusk-svm-programs-token = { version = "^0.4", default-features = false, featu
 solana-account = "^2"
 solana-logger = "^2"
 solana-pubkey = "^2"
-solana-rent = "^2"
 spl-associated-token-account = { version = "^6", default-features = false, features = ["no-entrypoint"] }
 spl-token = { version = "^8", default-features = false, features = ["no-entrypoint"] }
 
