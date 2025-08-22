@@ -1,17 +1,20 @@
-//! .so file size 4272
+//! .so file size 6_288
 
 #![cfg(feature = "test-sbf")]
 
-use mollusk_svm::{program::keyed_account_for_system_program, result::InstructionResult, Mollusk};
+use mollusk_svm::{
+    program::keyed_account_for_system_program,
+    result::{Check, InstructionResult},
+    Mollusk,
+};
 use proptest::{prelude::*, strategy::Union};
 use sanctum_ata_jiminy::sanctum_ata_core::{
     instructions::create::{NewCreateIxAccsBuilder, CREATE_IX_IS_SIGNER, CREATE_IX_IS_WRITABLE},
     pda::AtaPdaArgsBuilder,
 };
 use sanctum_ata_test_utils::{
-    account_from_mint, account_from_token_acc, are_all_accounts_rent_exempt, init_mint_acc,
-    is_tx_balanced, key_signer_writable_to_metas, silence_mollusk_prog_logs, sol_find_ata,
-    token_acc_for_trf,
+    account_from_mint, account_from_token_acc, init_mint_acc, is_tx_balanced,
+    key_signer_writable_to_metas, silence_mollusk_prog_logs, sol_find_ata, token_acc_for_trf,
 };
 use solana_account::Account;
 use solana_pubkey::Pubkey;
@@ -29,10 +32,18 @@ const MINT: Pubkey = solana_pubkey::pubkey!("2AHbbAHQQrQsEP7yrE9PGWpkn7Uz27PKJBB
 const SUPPLY: u64 = 29_125_461_325;
 const DECIMALS: u8 = 9;
 
-// CUs: 28423
+thread_local! {
+    static SVM: Mollusk = {
+        let mut svm = Mollusk::new(&PROG_ID, PROG_NAME);
+        mollusk_svm_programs_token::token::add_program(&mut svm);
+        mollusk_svm_programs_token::associated_token::add_program(&mut svm);
+        svm
+    };
+}
+
+// CUs: 28_851
 #[test]
 fn create_idempotent_nonexisting_cus() {
-    let svm = mollusk();
     let accounts = ix_accounts(
         FUNDING,
         WALLET,
@@ -42,28 +53,28 @@ fn create_idempotent_nonexisting_cus() {
     );
     let instr = ix(FUNDING, WALLET, MINT);
 
-    let InstructionResult {
-        compute_units_consumed,
-        raw_result,
-        resulting_accounts,
-        ..
-    } = svm.process_instruction(&instr, &accounts);
+    SVM.with(|svm| {
+        let InstructionResult {
+            compute_units_consumed,
+            raw_result,
+            resulting_accounts,
+            ..
+        } = svm.process_and_validate_instruction(&instr, &accounts, &[Check::all_rent_exempt()]);
 
-    raw_result.unwrap();
+        raw_result.unwrap();
 
-    eprintln!("{compute_units_consumed} CUs");
+        eprintln!("{compute_units_consumed} CUs");
 
-    are_all_accounts_rent_exempt(&resulting_accounts).unwrap();
-    assert!(is_tx_balanced(&accounts, &resulting_accounts));
+        assert!(is_tx_balanced(&accounts, &resulting_accounts));
 
-    // if program succeeded, it means ata create successfully
-    // executed, so no need to check properties of created ata
+        // if program succeeded, it means ata create successfully
+        // executed, so no need to check properties of created ata
+    });
 }
 
-// CUs: 12414
+// CUs: 12_842
 #[test]
 fn create_idempotent_already_existing_cus() {
-    let svm = mollusk();
     let accounts = ix_accounts(
         FUNDING,
         WALLET,
@@ -73,22 +84,23 @@ fn create_idempotent_already_existing_cus() {
     );
     let instr = ix(FUNDING, WALLET, MINT);
 
-    let InstructionResult {
-        compute_units_consumed,
-        raw_result,
-        resulting_accounts,
-        ..
-    } = svm.process_instruction(&instr, &accounts);
+    SVM.with(|svm| {
+        let InstructionResult {
+            compute_units_consumed,
+            raw_result,
+            resulting_accounts,
+            ..
+        } = svm.process_and_validate_instruction(&instr, &accounts, &[Check::all_rent_exempt()]);
 
-    raw_result.unwrap();
+        raw_result.unwrap();
 
-    eprintln!("{compute_units_consumed} CUs");
+        eprintln!("{compute_units_consumed} CUs");
 
-    are_all_accounts_rent_exempt(&resulting_accounts).unwrap();
-    assert!(is_tx_balanced(&accounts, &resulting_accounts));
+        assert!(is_tx_balanced(&accounts, &resulting_accounts));
 
-    // if program succeeded, it means ata create successfully
-    // executed, so no need to check properties of created ata
+        // if program succeeded, it means ata create successfully
+        // executed, so no need to check properties of created ata
+    })
 }
 
 proptest! {
@@ -117,7 +129,6 @@ proptest! {
         decimals: u8,
         supply: u64,
     ) {
-        let svm = mollusk();
         silence_mollusk_prog_logs();
         let accounts = ix_accounts(
             funding,
@@ -128,27 +139,23 @@ proptest! {
         );
         let instr = ix(funding, wallet, mint);
 
-        let InstructionResult {
-            raw_result,
-            resulting_accounts,
-            ..
-        } = svm.process_instruction(&instr, &accounts);
+        SVM.with(|svm| {
+            let InstructionResult {
+                raw_result,
+                resulting_accounts,
+                ..
+            } = svm.process_and_validate_instruction(&instr, &accounts, &[Check::all_rent_exempt()]);
 
-        raw_result.unwrap();
+            raw_result.unwrap();
 
-        are_all_accounts_rent_exempt(&resulting_accounts).unwrap();
-        prop_assert!(is_tx_balanced(&accounts, &resulting_accounts));
+            prop_assert!(is_tx_balanced(&accounts, &resulting_accounts));
 
-        // if program succeeded, it means ata create successfully
-        // executed, so no need to check properties of created ata
+            // if program succeeded, it means ata create successfully
+            // executed, so no need to check properties of created ata
+
+            Ok(())
+        }).unwrap();
     }
-}
-
-fn mollusk() -> Mollusk {
-    let mut svm = Mollusk::new(&PROG_ID, PROG_NAME);
-    mollusk_svm_programs_token::token::add_program(&mut svm);
-    mollusk_svm_programs_token::associated_token::add_program(&mut svm);
-    svm
 }
 
 fn ix_accounts(
